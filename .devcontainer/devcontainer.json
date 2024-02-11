@@ -1,0 +1,77 @@
+{
+    "name": "airflow-pipelines",
+    // "image": "python:3.9.18-bookworm",
+    // "image": "apache/airflow:latest",
+    // "image": "bitnami/airflow:latest",
+    // "containerUser": "linux",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "BUILD_IMAGE_NAME": "apache/airflow",
+            "BUILD_IMAGE_TAG": "latest"
+        },
+        "context": ".."
+    },
+    "runArgs": [
+        "--name=airflow-pipelines",
+        "--hostname=airflow-pipelines",
+        // "--env-file=${localEnv:SECRET_HOME}/.env",
+        "--env-file=.env",
+        "--network=alpine-net"
+    ],
+    "containerEnv": {
+        "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+        "AIRFLOW__CORE__LOAD_EXAMPLES": "True",
+        "AIRFLOW__CORE__DAGS_FOLDER": "${containerWorkspaceFolder}/airflow-pipeline/src/com/dags",
+        "AIRFLOW__CORE__PLUGINS_FOLDER": "${containerWorkspaceFolder}/airflow-pipeline/src/com/plugins",
+        "ANSIBLE_ENV": "${localEnv:ANSIBLE_ENV}"
+    },
+    "remoteEnv": {
+        "PORT": "8080",
+        "AIRFLOW_HOME": "${containerEnv:HOME}"
+    },
+    "portsAttributes": {
+        "8080": {
+            "label": "Airflow",
+            "onAutoForward": "notify"
+        }
+    },
+    "forwardPorts": [8080],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "esbenp.prettier-vscode",
+                "yzhang.markdown-all-in-one",
+                "DavidAnson.vscode-markdownlint",
+                "GitHub.vscode-pull-request-github",
+                "EditorConfig.EditorConfig",
+                "ms-vscode.makefile-tools",
+                "GitLab.gitlab-workflow",
+                "VisualStudioExptTeam.vscodeintellicode",
+                "VisualStudioExptTeam.intellicode-api-usage-examples",
+                "rangav.vscode-thunder-client",
+                "ms-python.black-formatter",
+                "charliermarsh.ruff"
+            ],
+            "settings": {
+                "python.testing.pytestArgs": ["fastapiapp"],
+                "python.testing.unittestEnabled": false,
+                "python.testing.pytestEnabled": true,
+                "python.defaultInterpreterPath": "${containerEnv:HOME}/.venv/bin/python3",
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.defaultProfile.windows": "bash",
+                "terminal.integrated.profiles.windows": {
+                    "bash": {
+                        "path": "bash",
+                        "icon": "terminal-bash"
+                    }
+                }
+            }
+        }
+    },
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/linux/.ssh,type=bind,consistency=cached"
+    ]
+    // "postStartCommand": "bash .devcontainer/post_create_commands.sh"
+}

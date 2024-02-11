@@ -1,0 +1,101 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "fastapiapp",
+    "dateExported": "2023-11-26T23:19:44.255Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "bf573bf1-78c4-45f0-8614-8ce03e12d436",
+            "name": "media",
+            "containerId": "",
+            "created": "2023-11-26T23:10:08.446Z",
+            "sortNum": 10000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "0a257e45-6944-4506-9dfa-d5d953f619a4",
+            "colId": "cf47c82a-f4dd-40eb-8751-39e5b8d935a0",
+            "containerId": "bf573bf1-78c4-45f0-8614-8ce03e12d436",
+            "name": "update",
+            "url": "http://localhost:3000/media/shows/1/update/",
+            "method": "PATCH",
+            "sortNum": 10000,
+            "created": "2023-11-26T23:10:40.059Z",
+            "modified": "2023-11-26T23:12:39.262Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "fastapiapp-x"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Breaking Bad\",\n  \"genre\": \"Drama\",\n  \"rating\": 9.5\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "bfbcba23-2d7e-457c-83c3-25542e11dedb",
+            "colId": "cf47c82a-f4dd-40eb-8751-39e5b8d935a0",
+            "containerId": "bf573bf1-78c4-45f0-8614-8ce03e12d436",
+            "name": "post",
+            "url": "http://localhost:3000/media/shows/1",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-11-26T23:14:12.124Z",
+            "modified": "2023-11-26T23:15:50.516Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "fastapiapp-x"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Breaking Bad\",\n  \"genre\": \"Drama\",\n  \"rating\": 9.5\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "11d22380-9e51-46ed-afff-0e2425001005",
+            "colId": "cf47c82a-f4dd-40eb-8751-39e5b8d935a0",
+            "containerId": "bf573bf1-78c4-45f0-8614-8ce03e12d436",
+            "name": "delete",
+            "url": "http://localhost:3000/media/shows/1",
+            "method": "DELETE",
+            "sortNum": 30000,
+            "created": "2023-11-26T23:14:57.755Z",
+            "modified": "2023-11-26T23:15:16.199Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "fastapiapp-x"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Breaking Bad\",\n  \"genre\": \"Drama\",\n  \"rating\": 9.5\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
