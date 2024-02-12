@@ -1,13 +1,14 @@
 #!/bin/bash
 
-pip install --upgrade pip
+python3 -m pip install pip poetry -U
 
-export AIRFLOW_HOME=~/airflow
+poetry install
+
+export AIRFLOW_HOME="$(pwd)/airflow"
 export AIRFLOW_VERSION=2.7.3
 PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
 CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-source ~/workspace/venv/venv@airflow/bin/activate && \
-    pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+poetry run pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
 
 # export AIRFLOW_HOME=~/airflow
 # export AIRFLOW_VERSION=2.7.3
@@ -16,7 +17,4 @@ source ~/workspace/venv/venv@airflow/bin/activate && \
 # export AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA="airflow"
 # export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN_SECRET=$POSTGRES_PASSWORD
 
-eval export $(grep -v '^#' .env | xargs )
-
-source ~/workspace/venv/venv@airflow/bin/activate && \
-    airflow standalone
+eval export $(egrep -v '^#|^$' ".env" | xargs )

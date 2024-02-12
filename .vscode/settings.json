@@ -1,0 +1,6 @@
+{
+    "python.defaultInterpreterPath": "${env:WORKSPACE_HOME}/venv/venv@airflow/bin/python",
+    "python.analysis.extraPaths": [
+        "./src/etl"
+    ]
+}

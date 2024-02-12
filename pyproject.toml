@@ -11,6 +11,9 @@ python = "^3.10"
 psycopg2 = "^2.9.9"
 redis = "^5.0.1"
 requests = "^2.31.0"
+pydantic = "^2.6.1"
+pydantic-settings = "^2.1.0"
+loguru = "^0.7.2"
 
 
 [build-system]
