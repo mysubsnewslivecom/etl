@@ -13,7 +13,14 @@ redis = "^5.0.1"
 requests = "^2.31.0"
 pydantic-settings = "^2.3.4"
 apache-airflow-providers-hashicorp = "^3.7.1"
+psycopg2-binary = "^2.9.9"
 
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+pylint = "^3.2.5"
+black = "^24.4.2"
+ruff = "^0.5.2"
 
 [build-system]
 requires = ["poetry-core"]

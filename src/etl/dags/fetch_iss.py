@@ -1,10 +1,11 @@
 import logging
-from airflow.decorators import dag, task
+
 import pendulum
-from etl.helpers.utils import get_dag_id
-from etl.helpers.constants import AIRFLOW_DEFAULT_ARGS
+
+from airflow.decorators import dag, task
 from airflow.models.connection import Connection
-from airflow.models.variable import Variable
+from etl.helpers.constants import AIRFLOW_DEFAULT_ARGS
+from etl.helpers.utils import get_dag_id
 
 logger = logging.getLogger("airflow.task")
 logger.setLevel(logging.INFO)
@@ -24,7 +25,6 @@ postgres = Connection.get_connection_from_secrets("postgres")
     default_args=AIRFLOW_DEFAULT_ARGS,
 )
 def example_task_logger():
-
     @task
     def log_to_both():
         logger.info({"test": 123})

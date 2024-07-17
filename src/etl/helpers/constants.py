@@ -1,4 +1,5 @@
 import pendulum
+
 from etl.config import settings
 
 AIRFLOW_DEFAULT_ARGS = {

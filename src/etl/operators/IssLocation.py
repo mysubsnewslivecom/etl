@@ -1,22 +1,14 @@
-import os
-import sys
-from requests import request
+import logging
+
+from config import settings
+from database.PostgresConnect import PostgresConnect
+from operators.models import ISSLocationModel
 from psycopg2 import sql
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.extras import DictCursor
-from loguru import logger
+from requests import request
 
-libpath = os.path.abspath("src/etl")
-sys.path.append(libpath)
-
-
-from config import settings
-from operators.models import ISSLocationModel
-
-from database.PostgresConnect import PostgresConnect
-
-logger.remove()
-logger.add(sys.stdout, level=str(settings.log_level))
+logger = logging.getLogger()
 
 
 class ISSLocation:
@@ -37,7 +29,6 @@ class ISSLocation:
             raise Exception("Failed to get ISS location")
 
     def execute_data_iss(self, data: ISSLocationModel):
-
         metadata = {
             "schema_name": "custom",
             "table_name": "iss_location",

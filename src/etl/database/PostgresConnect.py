@@ -1,13 +1,6 @@
-import sys
-import os
 import psycopg2
-from psycopg2 import sql
-
-libpath = os.path.abspath("src/etl")
-sys.path.append(libpath)
-
-
 from config import settings
+from psycopg2 import sql
 
 
 class PostgresConnect:
