@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "redhat.vscode-yaml",
+        "njpwerner.autodocstring",
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig",
+        "ms-python.isort",
+        "ms-python.python",
+        "ms-vscode.makefile-tools",
+        "ms-python.black-formatter"
+    ]
+}
