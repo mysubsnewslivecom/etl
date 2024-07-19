@@ -30,6 +30,6 @@ celery: ## Start celery worker
 
 kill: ## kill all airflow process
 	$(LOG) "Start celery worker"
-    kill -9 $(ps -ef|grep airflow| awk -F' ' '{ print $2 }')
+	kill -9 $(ps -ef|grep airflow| awk -F' ' '{ print $2 }')
 
 # pkill -f -USR2 "airflow scheduler"
