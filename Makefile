@@ -19,9 +19,11 @@ help: ## Show help message
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 scheduler: ## Start Scheduler
+	$(LOG) "Start Scheduler"
 	@nohup airflow scheduler --pid $(LOG_DIR)/scheduler.pid > $(LOG_DIR)/airflow_scheduler.log 2>&1 &
 
-webserver: ## Start webserver
+webserver: ## Start Webserver
+	$(LOG) "Start webserver"
 	@nohup airflow webserver --pid $(LOG_DIR)/webserver.pid > $(LOG_DIR)/airflow_webserver.log 2>&1 &
 
 celery: ## Start celery worker
@@ -33,3 +35,5 @@ kill: ## kill all airflow process
 	kill -9 $(ps -ef|grep airflow| awk -F' ' '{ print $2 }')
 
 # pkill -f -USR2 "airflow scheduler"
+
+all: webserver scheduler celery ## Start all

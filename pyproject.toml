@@ -16,6 +16,7 @@ apache-airflow-providers-hashicorp = "^3.7.1"
 psycopg2-binary = "^2.9.9"
 apache-airflow = "^2.9.3"
 apache-airflow-providers-postgres = "^5.11.2"
+hvac = "^2.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
