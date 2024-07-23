@@ -1,5 +1,8 @@
+from functools import cached_property
 from typing import Optional
 import hvac
+from hvac.exceptions import VaultError
+
 from etl.config import settings
 from etl.helpers.logger_config import Logging
 
@@ -9,21 +12,53 @@ log = Logging(service_name=__name__).get_logger
 class VaultClient:
     def __init__(
         self,
-        # token: Optional[str],
+        auth_type: str = "approle",
         url: str = settings.vault_addr,
-        mount: str = "airflow",
+        mount_point: str = "airflow",
         role_id: str = settings.vault_approle,
         secret_id: str = settings.vault_secret_id,
+        **kwargs,
     ):
         self.role_id = role_id
         self.secret_id = secret_id
-        self.mount = mount
+        self.mount_point = mount_point
+        self.kwargs = kwargs
+        self.url = url
+        self.auth_type = auth_type
 
-        # self.client = hvac.Client(url=url, token=token)
-        self.client = hvac.Client(url=url)
-        self._auth_approle()
+    @property
+    def client(self):
+        """
+        Checks that it is still authenticated to Vault and invalidates the cache if this is not the case.
 
-    def _auth_approle(self):
+        :return: Vault Client
+        """
+        if not self._client.is_authenticated():
+            # Invalidate the cache:
+            # https://github.com/pydanny/cached-property#invalidating-the-cache
+            self.__dict__.pop("_client", None)
+        return self._client
+
+    @cached_property
+    def _client(self) -> hvac.Client:
+        """
+        Return an authenticated Hashicorp Vault client.
+
+        :return: Vault Client
+
+        """
+        _client = hvac.Client(url=self.url, **self.kwargs)
+        if self.auth_type == "approle":
+            self._auth_approle(_client)
+        else:
+            raise VaultError(f"Authentication type '{self.auth_type}' not supported")
+
+        if _client.is_authenticated():
+            return _client
+        else:
+            raise VaultError("Vault Authentication Error!")
+
+    def _auth_approle(self, _client: hvac.Client):
         """
         Authenticate to Vault using AppRole.
 
@@ -31,10 +66,8 @@ class VaultClient:
         :param secret_id: The AppRole secret ID.
         """
         try:
-            self.client.auth.approle.login(
-                role_id=self.role_id, secret_id=self.secret_id
-            )
-            if not self.client.is_authenticated():
+            _client.auth.approle.login(role_id=self.role_id, secret_id=self.secret_id)
+            if not _client.is_authenticated():
                 raise ValueError("Vault AppRole authentication failed.")
             log.info(
                 "Authenticated with role-id: %s and secret-id: %s",
@@ -52,13 +85,9 @@ class VaultClient:
         :return: The secret data as a dictionary.
         """
         try:
-            # list = self.client.secrets.kv.v2.list_secrets(path="airflow")
-            # log.info(list)
-            # path = "/".join(["secret", self.mount, _path])
             response = self.client.secrets.kv.v2.read_secret_version(
                 path=_path,
-                mount_point="airflow",
-                # version="3",
+                mount_point=self.mount_point,
                 raise_on_deleted_version=True,
             )
             log.info(response["data"]["data"])
@@ -118,8 +147,8 @@ class VaultClient:
             return None
 
 
-# Example usage
-if __name__ == "__main__":
-    vault_client = VaultClient()
-    secret_data = vault_client.read_secret("connections/airflow")
-    log.info("Secret data: %s", secret_data)
+# # Example usage
+# if __name__ == "__main__":
+#     vault_client = VaultClient(auth_type="approle")
+#     secret_data = vault_client.read_secret("connections/airflow")
+#     log.info("Secret data: %s", secret_data)

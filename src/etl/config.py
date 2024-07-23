@@ -21,7 +21,7 @@ class Config(CustomBaseSettings):
 
     vault_addr: str = Field(alias="VAULT_ADDR", default="http://127.0.0.1:8200")
     vault_approle: str = Field(alias="VAULT_APPROLE", default="airflow-approle")
-    vault_secret_id: Optional[str] = Field(alias="VAULT_SECRET_ID")
+    vault_secret_id: str = Field(alias="VAULT_SECRET_ID")
     GRAFANA_LOKI_HOST: str = Field(alias="GRAFANA_LOKI_HOST")
 
 
