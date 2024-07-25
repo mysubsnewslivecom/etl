@@ -18,6 +18,14 @@ LOCAL_DIR = Path(__file__).parent
 AIRFLOW_SOURCES_ROOT = Path(__file__).parents[3]
 
 
+def get_connections(conn_id: str):
+    return Connection.get_connection_from_secrets(conn_id=conn_id)
+
+
+def get_variables(key: str):
+    return Variable.get(key=key)
+
+
 @dag(
     dag_id=dag_id,
     schedule=None,
@@ -32,14 +40,9 @@ def example_task_logger():
     def log_to_both():
         logger.info({"test": 123})
         logger.info("test", extra={"this": "worked", "yup": "here too"})
-        postgres = Connection.get_connection_from_secrets("postgres")
+        postgres = get_connections(conn_id="airflow")
         logger.info(postgres.host)
-        logger.info(Variable.get("date"))
-        # logger.info(Variable.get("hostname"))
-        logger.exception("raise hell")
-        logger.info(LOCAL_DIR)
-        logger.info(AIRFLOW_SOURCES_ROOT)
-        logger.info(list(Path(__file__).parents))
+        logger.info(get_variables(key="date"))
 
     log_to_both()
 

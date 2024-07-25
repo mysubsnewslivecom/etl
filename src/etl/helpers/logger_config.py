@@ -13,7 +13,7 @@ class Logging:
     ):
         self.service_name = service_name
         self.loki_url = loki_url
-        self.logger = None
+        self.logger: logging.Logger | None = None
         self._setup_logger()
 
     def _setup_logger(self):

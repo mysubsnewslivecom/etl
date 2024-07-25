@@ -138,7 +138,9 @@ class VaultClient:
         """
         log.info("List secrets")
         try:
-            secrets = self.client.secrets.kv.v2.list_secrets(path=path)
+            secrets = self.client.secrets.kv.v2.list_secrets(
+                path=path, mount_point=self.mount_point
+            )
             secret_list = secrets.get("data", {}).get("keys", [])
             log.info(secret_list)
             return secret_list
@@ -152,3 +154,4 @@ class VaultClient:
 #     vault_client = VaultClient(auth_type="approle")
 #     secret_data = vault_client.read_secret("connections/airflow")
 #     log.info("Secret data: %s", secret_data)
+#     list_secrets = vault_client.list_secrets(path="connections")
