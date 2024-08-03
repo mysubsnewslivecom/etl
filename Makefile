@@ -18,21 +18,24 @@ help: ## Show help message
 		| sort \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-scheduler: ## Start Scheduler
+.md:
+	mkdir -pv $(LOG_DIR)
+
+scheduler: .md ## Start Scheduler
 	$(LOG) "Start Scheduler"
 	@nohup airflow scheduler --pid $(LOG_DIR)/scheduler.pid > $(LOG_DIR)/airflow_scheduler.log 2>&1 &
 
-webserver: ## Start Webserver
+webserver: .md ## Start Webserver
 	$(LOG) "Start webserver"
 	@nohup airflow webserver --pid $(LOG_DIR)/webserver.pid > $(LOG_DIR)/airflow_webserver.log 2>&1 &
 
-celery: ## Start celery worker
+celery: .md ## Start celery worker
 	$(LOG) "Start celery worker"
 	@nohup airflow celery worker --pid $(LOG_DIR)/celery.pid > $(LOG_DIR)/airflow_celery.log 2>&1 &
 
 kill: ## kill all airflow process
-	$(LOG) "Start celery worker"
-	kill -9 $(ps -ef|grep airflow| awk -F' ' '{ print $2 }')
+	$(LOG) "kill all airflow process"
+	kill -9 $$(ps -ef|grep airflow| awk -F' ' '{ print $$2 }') || true
 
 # pkill -f -USR2 "airflow scheduler"
 

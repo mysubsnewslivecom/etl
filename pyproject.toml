@@ -14,7 +14,7 @@ requests = "^2.31.0"
 pydantic-settings = "^2.3.4"
 apache-airflow-providers-hashicorp = "^3.7.1"
 psycopg2-binary = "^2.9.9"
-apache-airflow = "^2.9.3"
+apache-airflow = {version = "2.9.3", extras = ["celery", "fab", "hvac", "pandas", "postgres"]}
 apache-airflow-providers-postgres = "^5.11.2"
 hvac = "^2.3.0"
 
