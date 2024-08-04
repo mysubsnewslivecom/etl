@@ -30,13 +30,16 @@ def example_task_logger():
     def create_tar() -> str:
         return "tar -cvzf /tmp/secrets.tar.gz ~/workspace/secrets/"
 
-    # Or directly accessing `dag_run.conf`
     @task.bash
     def backup() -> str:
-        date = pendulum.now().format(fmt="YMMDD")
+        date = pendulum.now().format(fmt="%Y%M%D")
         return f"rsync -avzHP --dry-run /tmp/secrets.tar.gz ~/workspace/bckup/secrets.{date}.tar.gz"
 
-    create_tar() >> backup()
+    @task.bash
+    def cleanup_logs() -> str:
+        return f"bash scripts/clean-logs"
+
+    create_tar() >> backup() >> cleanup_logs()
 
 
 example_task_logger()
