@@ -9,7 +9,7 @@ AIRFLOW_DEFAULT_ARGS = {
     "email_on_retry": False,
     "retries": 1,
     "retry_delay": pendulum.duration(minutes=5),
-    "sla": pendulum.duration(minutes=1),
+    "sla": pendulum.duration(hours=1),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
