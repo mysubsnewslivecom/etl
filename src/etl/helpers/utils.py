@@ -16,3 +16,16 @@ def _get_data(execution_date, **_):
     # request.urlretrieve(url, output_path)
 
     return url
+
+
+def task_failure_alert(context):
+    print(f"Task has failed, task_instance_key_str: {context['task_instance_key_str']}")
+
+
+def dag_success_alert(context):
+    print(f"DAG has succeeded, run_id: {context['run_id']}")
+
+def task_custom_dimensions(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task_instance']. task_id
+    # outer_task_success_callback(dag_id, task_id, email)

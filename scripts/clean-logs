@@ -33,7 +33,6 @@ function continous_cleanup(){
 
 function cleanup_logs(){
     log "Running cleanup of log directory. Retention: ${RETENTION}"
-    sleep 120
     find "${DIRECTORY}"/logs \
         -type d -name 'lost+found' -prune -o \
         -type f -mtime +"${RETENTION}" -name '*.log' -print0 | \
