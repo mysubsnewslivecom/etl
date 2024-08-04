@@ -37,7 +37,9 @@ def example_task_logger():
 
     @task.bash
     def cleanup_logs() -> str:
-        return f"bash scripts/clean-logs"
+        # return f"bash scripts/clean-logs"
+        logger.info("vvv")
+        return f"pwd"
 
     create_tar() >> backup() >> cleanup_logs()
 
