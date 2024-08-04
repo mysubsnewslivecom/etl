@@ -7,7 +7,7 @@
     "build": {
         "dockerfile": "Dockerfile",
         "args": {
-            "BUILD_IMAGE_NAME": "apache/airflow",
+            "BUILD_IMAGE_NAME": "mysubsnews/python",
             "BUILD_IMAGE_TAG": "latest"
         },
         "context": ".."
@@ -36,7 +36,9 @@
             "onAutoForward": "notify"
         }
     },
-    "forwardPorts": [8080],
+    "forwardPorts": [
+        8080
+    ],
     "customizations": {
         "vscode": {
             "extensions": [
@@ -55,7 +57,9 @@
                 "charliermarsh.ruff"
             ],
             "settings": {
-                "python.testing.pytestArgs": ["fastapiapp"],
+                "python.testing.pytestArgs": [
+                    "fastapiapp"
+                ],
                 "python.testing.unittestEnabled": false,
                 "python.testing.pytestEnabled": true,
                 "python.defaultInterpreterPath": "${containerEnv:HOME}/.venv/bin/python3",
@@ -72,6 +76,7 @@
     },
     "mounts": [
         "source=${localEnv:HOME}/.ssh,target=/home/linux/.ssh,type=bind,consistency=cached"
-    ]
-    // "postStartCommand": "bash .devcontainer/post_create_commands.sh"
+    ],
+    "initializeCommand": "test -f .env || touch .env",
+    "postStartCommand": "bash .devcontainer/post_create_commands.sh"
 }

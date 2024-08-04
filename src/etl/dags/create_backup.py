@@ -14,6 +14,7 @@ logger.setLevel(logging.INFO)
 
 dag_id = get_dag_id(__file__)
 
+
 @dag(
     dag_id=dag_id,
     schedule=None,
@@ -27,14 +28,15 @@ def example_task_logger():
 
     @task.bash
     def create_tar() -> str:
-        return 'tar -cvzf /tmp/secrets.tar.gz ~/workspace/secrets/'
-
+        return "tar -cvzf /tmp/secrets.tar.gz ~/workspace/secrets/"
 
     # Or directly accessing `dag_run.conf`
     @task.bash
     def backup() -> str:
-        return f'rsync -avzHP --dry-run /tmp/secrets.tar.gz ~/workspace/bckup/'
+        date = pendulum.now().format(fmt="%Y%M%D")
+        return f"rsync -avzHP --dry-run /tmp/secrets.tar.gz ~/workspace/bckup/secrets.{date}.tar.gz"
 
     create_tar() >> backup()
+
 
 example_task_logger()
