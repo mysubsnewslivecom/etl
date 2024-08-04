@@ -33,7 +33,7 @@ def example_task_logger():
     # Or directly accessing `dag_run.conf`
     @task.bash
     def backup() -> str:
-        date = pendulum.now().format(fmt="%Y%M%D")
+        date = pendulum.now().format(fmt="YMMDD")
         return f"rsync -avzHP --dry-run /tmp/secrets.tar.gz ~/workspace/bckup/secrets.{date}.tar.gz"
 
     create_tar() >> backup()
