@@ -8,6 +8,7 @@ from airflow.models.connection import Connection
 from airflow.models.variable import Variable
 from etl.helpers.constants import AIRFLOW_DEFAULT_ARGS
 from etl.helpers.utils import get_dag_id, _get_data
+from airflow.configuration import AIRFLOW_HOME
 
 logger = logging.getLogger("airflow.task")
 logger.setLevel(logging.INFO)
@@ -37,9 +38,7 @@ def example_task_logger():
 
     @task.bash
     def cleanup_logs() -> str:
-        # return f"bash scripts/clean-logs"
-        logger.info("vvv")
-        return f"pwd"
+        return f"bash {AIRFLOW_HOME}/scripts/clean-logs"
 
     create_tar() >> backup() >> cleanup_logs()
 
