@@ -1,20 +1,21 @@
 import pendulum
-
 from etl.config import settings
 
 AIRFLOW_DEFAULT_ARGS = {
+    "owner": "airflow",
     "depends_on_past": False,
     "email": settings.EMAIL,
     "email_on_failure": False,
     "email_on_retry": False,
     "retries": 1,
-    # "retry_delay": pendulum.duration(minutes=5),
+    "retry_delay": pendulum.duration(minutes=5),
+    "sla": pendulum.duration(minutes=1),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
     # 'end_date': datetime(2016, 1, 1),
     # 'wait_for_downstream': False,
-    # 'sla': timedelta(hours=2),
+    # 'sla': timedelta(hours=1),
     # 'execution_timeout': timedelta(seconds=300),
     # 'on_failure_callback': some_function, # or list of functions
     # 'on_success_callback': some_other_function, # or list of functions

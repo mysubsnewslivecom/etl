@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-
 set -euo pipefail
 
 readonly DIRECTORY="${AIRFLOW_HOME:-/usr/local/airflow}"
@@ -8,20 +6,52 @@ readonly RETENTION="${AIRFLOW__LOG_RETENTION_DAYS:-15}"
 
 trap "exit" INT TERM
 
-readonly EVERY=$((15*60))
+function log(){
+    local COLOR_YELLOW=$'\e[33m'
+    local COLOR_RESET=$'\e[0m'
+    local message="$1"
+    printf "${COLOR_YELLOW}[$(date "+%d-%b-%Y %H:%M:%S")] > %s ${COLOR_RESET}\n" "$message"
+}
 
-echo "Cleaning logs every $EVERY seconds"
+function continous_cleanup(){
+    readonly EVERY=$((15*60))
+    log "Cleaning logs every $EVERY seconds"
+    while true; do
+        log "Trimming airflow logs to ${RETENTION} days."
+        find "${DIRECTORY}"/logs \
+            -type d -name 'lost+found' -prune -o \
+            -type f -mtime +"${RETENTION}" -name '*.log' -print0 | \
+            xargs -0 rm -f || true
 
-while true; do
-  echo "Trimming airflow logs to ${RETENTION} days."
-  find "${DIRECTORY}"/logs \
-    -type d -name 'lost+found' -prune -o \
-    -type f -mtime +"${RETENTION}" -name '*.log' -print0 | \
-    xargs -0 rm -f || true
+        find "${DIRECTORY}"/logs -type d -empty -delete || true
 
-  find "${DIRECTORY}"/logs -type d -empty -delete || true
+        seconds=$(( $(date -u +%s) % EVERY))
+        (( seconds < 1 )) || sleep $((EVERY - seconds - 1))
+        sleep 1
+    done
+}
 
-  seconds=$(( $(date -u +%s) % EVERY))
-  (( seconds < 1 )) || sleep $((EVERY - seconds - 1))
-  sleep 1
-done
+function cleanup_logs(){
+    log "Running cleanup of log directory. Retention: ${RETENTION}"
+    sleep 120
+    find "${DIRECTORY}"/logs \
+        -type d -name 'lost+found' -prune -o \
+        -type f -mtime +"${RETENTION}" -name '*.log' -print0 | \
+        xargs -0 rm -vf || true
+
+    find "${DIRECTORY}"/logs -type d -empty -delete || true
+
+    log "Cleanup completed"
+}
+
+function main(){
+    cleanup_logs
+}
+
+[[ $# -eq 0 ]] && option=all || option=$1
+case $option in
+  cleanup) cleanup_logs ;;
+  cont_cleanup) continous_cleanup ;;
+  all) main ;;
+  *) log "unknown options" ;;
+esac
