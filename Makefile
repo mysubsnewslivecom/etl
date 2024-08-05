@@ -35,7 +35,8 @@ celery: .md ## Start celery worker
 
 kill: ## kill all airflow process
 	$(LOG) "kill all airflow process"
-	kill -9 $$(ps -ef|grep airflow| awk -F' ' '{ print $$2 }') || true
+	kill -9 $$(ps -ef|grep airflow| awk -F' ' '{ print $$2 }') 2> /dev/null || true
+    rm -rvf $(LOG_DIR)/*.pid
 
 # pkill -f -USR2 "airflow scheduler"
 
