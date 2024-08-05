@@ -6,6 +6,8 @@ from airflow.decorators import dag, task, task_group
 from etl.helpers.constants import AIRFLOW_DEFAULT_ARGS
 from etl.helpers.utils import get_dag_id, dag_success_alert, task_failure_alert
 from airflow.configuration import AIRFLOW_HOME
+from airflow.models.taskinstance import TaskInstance
+
 # from airflow.models import provide_session
 
 logger = logging.getLogger("airflow.task")
@@ -17,15 +19,17 @@ dag_id = get_dag_id(__file__)
 # @provide_session
 # def on_success_callback(context, session=None):
 def on_success_callback(context):
-    task_instance = context["ti"]
-    for k,v in context.items():
+    task_instance: TaskInstance = context["ti"]
+    for k, v in context.items():
         logger.info("%s: %s", k, str(v))
 
-    for k,v in task_instance.items():
-        logger.info("%s: %s", k, str(v))
+    # for k, v in task_instance.items():
+    #     logger.info("%s: %s", k, str(v))
 
     logger.info(task_instance.task_id)
-    logger.info(task_instance.map_index)
+    logger.info(task_instance.dag_id)
+    logger.info(task_instance.key)
+
 
 @dag(
     dag_id=dag_id,
