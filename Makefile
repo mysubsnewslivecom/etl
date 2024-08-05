@@ -3,7 +3,6 @@ SHELL=/bin/bash
 BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
 MAKEFLAGS += --silent
-
 FORMATTING_BEGIN_GREY = \033[30;1m
 FORMATTING_END = \033[0m
 
@@ -23,21 +22,24 @@ help: ## Show help message
 
 scheduler: .md ## Start Scheduler
 	$(LOG) "Start Scheduler"
-	@nohup airflow scheduler --pid $(LOG_DIR)/scheduler.pid > $(LOG_DIR)/airflow_scheduler.log 2>&1 &
+	source ~/workspace/venv/.airflow/bin/activate \
+	&& nohup airflow scheduler --pid $(LOG_DIR)/scheduler.pid > $(LOG_DIR)/airflow_scheduler.log 2>&1 &
 
 webserver: .md ## Start Webserver
 	$(LOG) "Start webserver"
-	@nohup airflow webserver --pid $(LOG_DIR)/webserver.pid > $(LOG_DIR)/airflow_webserver.log 2>&1 &
+	source ~/workspace/venv/.airflow/bin/activate \
+	&& nohup airflow webserver --pid $(LOG_DIR)/webserver.pid > $(LOG_DIR)/airflow_webserver.log 2>&1 &
 
 celery: .md ## Start celery worker
 	$(LOG) "Start celery worker"
-	@nohup airflow celery worker --pid $(LOG_DIR)/celery.pid > $(LOG_DIR)/airflow_celery.log 2>&1 &
+	source ~/workspace/venv/.airflow/bin/activate \
+	&& nohup airflow celery worker --pid $(LOG_DIR)/celery.pid > $(LOG_DIR)/airflow_celery.log 2>&1 &
 
 kill: ## kill all airflow process
 	$(LOG) "kill all airflow process"
-	kill -9 $$(ps -ef|grep airflow| awk -F' ' '{ print $$2 }') 2> /dev/null || true
-	rm -rvf $(LOG_DIR)/*.pid
+	kill -9 $$(ps -ef|grep -v grep |grep airflow| awk -F' ' '{ print $$2 }') 2> /dev/null || true
+	rm -rvf $(LOG_DIR)/*.pid || true
 
 # pkill -f -USR2 "airflow scheduler"
 
-all: webserver scheduler celery ## Start all
+all: kill webserver scheduler celery ## Start all
