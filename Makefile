@@ -1,4 +1,6 @@
+-include .env
 SHELL=/bin/bash
+
 # VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
